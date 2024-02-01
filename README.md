@@ -1,2 +1,2 @@
 # chat-web
-Making bots better.
+Making chatbots better.
