@@ -27,7 +27,8 @@ if __name__ == '__main__':
     question = st.text_input("`Ask a question:`")
     
     if url:
-        vector_obj = scrape_url(url=url)
+        vector_obj=scrape_url(url=url)
+        
 
     if question:
         # Generate answer (w/ citations)
@@ -45,6 +46,5 @@ if __name__ == '__main__':
         # answer.info('`Answer:`\n\n' + result)
         # st.info('`Sources:`\n\n' + result['sources'])
     # print(result)
-    
-    
-    
+
+
