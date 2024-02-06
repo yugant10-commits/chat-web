@@ -1,7 +1,10 @@
 from src.scrapper import ScrapeWebPage
 from src.compressed_search import SimilarityCalculator
 from src.vector_search import VectorSearch
+from src.get_response import ResponseLLM
+
 import streamlit as st
+
 if __name__ == '__main__':
     st.set_page_config(page_title="Interweb Explorer", page_icon="🌐")
     # st.sidebar.image("img/ai.png")
@@ -26,7 +29,12 @@ if __name__ == '__main__':
         docs, metadatas = vector_obj._split_data()
         data_store = vector_obj._faiss_search()
         result = data_store.similarity_search(question)
-        st.write(result)
+        context = result[0].page_content
+        answer_response = ResponseLLM(
+            context=context,
+            question=question,   
+        )._generate()
+        st.write(answer_response)
         # answer.info('`Answer:`\n\n' + result)
         # st.info('`Sources:`\n\n' + result['sources'])
     # print(result)
