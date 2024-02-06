@@ -43,8 +43,8 @@ if __name__ == '__main__':
             question=question,   
         )._generate()
         st.write(answer_response)
-        # answer.info('`Answer:`\n\n' + result)
-        # st.info('`Sources:`\n\n' + result['sources'])
+        # answer.info('`Answer:`\n\n' + result)s
+        st.info(f'`Sources:`\n\n {result[0].metadata["source"]}')
     # print(result)
 
 
