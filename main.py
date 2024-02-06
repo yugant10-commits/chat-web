@@ -1,7 +1,20 @@
 from src.scrapper import ScrapeWebPage
 from src.compressed_search import SimilarityCalculator
 from src.vector_search import VectorSearch
+from src.get_response import ResponseLLM
+
 import streamlit as st
+
+@st.cache_data()
+def scrape_url(url):
+    url_scrapper = ScrapeWebPage(url)
+    url_list = url_scrapper.get_url()
+    content = url_scrapper.get_page_contents(url_list = url_list)
+    vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
+
+    return vector_obj
+
+
 if __name__ == '__main__':
     st.set_page_config(page_title="Interweb Explorer", page_icon="🌐")
     # st.sidebar.image("img/ai.png")
@@ -14,10 +27,8 @@ if __name__ == '__main__':
     question = st.text_input("`Ask a question:`")
     
     if url:
-        url_scrapper = ScrapeWebPage(url)
-        url_list = url_scrapper.get_url()
-        content = url_scrapper.get_page_contents(url_list = url_list)
-        vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
+        vector_obj=scrape_url(url=url)
+        
 
     if question:
         # Generate answer (w/ citations)
@@ -26,10 +37,14 @@ if __name__ == '__main__':
         docs, metadatas = vector_obj._split_data()
         data_store = vector_obj._faiss_search()
         result = data_store.similarity_search(question)
-        st.write(result)
-        # answer.info('`Answer:`\n\n' + result)
-        # st.info('`Sources:`\n\n' + result['sources'])
+        context = result[0].page_content
+        answer_response = ResponseLLM(
+            context=context,
+            question=question,   
+        )._generate()
+        st.write(answer_response)
+        # answer.info('`Answer:`\n\n' + result)s
+        st.info(f'`Sources:`\n\n {result[0].metadata["source"]}')
     # print(result)
-    
-    
-    
+
+

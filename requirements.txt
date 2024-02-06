@@ -1,1 +1,9 @@
 pandas
+openai
+streamlit
+faiss-cpu
+beautifulsoup4
+sentencepiece
+sentence-transformers
+python-dotenv
+langchain

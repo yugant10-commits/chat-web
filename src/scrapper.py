@@ -23,7 +23,7 @@ class ScrapeWebPage:
      
     def get_page_contents(self, url_list:list):
         new_url_list = [url for url in url_list if "#" not in url]
-        process_list = [url for url in new_url_list if url.startswith("https://tai.com.np")]
+        process_list = [url for url in new_url_list if url.startswith(self.url)]
         pages=[]
         for link in process_list:
             try:
@@ -46,7 +46,7 @@ class ScrapeWebPage:
         return s
     
 
-# tai_scraper = ScrapeWebPage("https://www.wiseadmit.io/blogs")
+# tai_scraper = ScrapeWebPage("https://kathford.edu.np/")
 # url_list = tai_scraper.get_url()
 # content = tai_scraper.get_page_contents(url_list = url_list)
 # print(url_list)
