@@ -10,7 +10,8 @@ _PROMPT_TEMPLATE = """Please Behave as Customer Support. Your task is to provide
 Only use your knowledge to craft the answer from the given context, add details if you know any and make it clear and comprehensive.
 If you need full context to answer some questions, respectfully respond with that but don't try to give incomplete answer.
 
-If you cannot find the answer in the given context, Please respond with `<NO ANSWER>`. Don't try to makeup the answer.
+If you cannot find the answer in the given context, Please respond with you are not aware about the question and ask for context.
+ Don't try to makeup the answer.
     
 
 Context: {context}

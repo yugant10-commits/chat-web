@@ -5,6 +5,16 @@ from src.get_response import ResponseLLM
 
 import streamlit as st
 
+@st.cache_data()
+def scrape_url(url):
+    url_scrapper = ScrapeWebPage(url)
+    url_list = url_scrapper.get_url()
+    content = url_scrapper.get_page_contents(url_list = url_list)
+    vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
+
+    return vector_obj
+
+
 if __name__ == '__main__':
     st.set_page_config(page_title="Interweb Explorer", page_icon="🌐")
     # st.sidebar.image("img/ai.png")
@@ -17,10 +27,7 @@ if __name__ == '__main__':
     question = st.text_input("`Ask a question:`")
     
     if url:
-        url_scrapper = ScrapeWebPage(url)
-        url_list = url_scrapper.get_url()
-        content = url_scrapper.get_page_contents(url_list = url_list)
-        vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
+        vector_obj = scrape_url(url=url)
 
     if question:
         # Generate answer (w/ citations)
