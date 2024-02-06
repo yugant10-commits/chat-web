@@ -17,6 +17,8 @@ class ScrapeWebPage:
         urls = []
         for link in soup.find_all("a"):
             urls.append(link.get("href"))
+        if self.url not in urls:
+            urls.append(self.url)
         return urls    
      
     def get_page_contents(self, url_list:list):
