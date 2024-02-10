@@ -2,6 +2,7 @@ from src.scrapper import ScrapeWebPage
 from src.compressed_search import SimilarityCalculator
 from src.vector_search import VectorSearch
 from src.get_response import ResponseLLM
+from src.ollama import OllamaGeneration
 
 import streamlit as st
 
@@ -42,6 +43,11 @@ if __name__ == '__main__':
             context=context,
             question=question,   
         )._generate()
+        # answer_response = OllamaGeneration(
+        #     context=context,
+        #     question=question, 
+        #     model="llama2"  
+        # )._generate()
         st.write(answer_response)
         # answer.info('`Answer:`\n\n' + result)s
         st.info(f'`Sources:`\n\n {result[0].metadata["source"]}')
