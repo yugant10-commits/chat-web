@@ -19,13 +19,29 @@ class ScrapeWebPage:
             urls.append(link.get("href"))
         if self.url not in urls:
             urls.append(self.url)
-        return urls    
-     
-    def get_page_contents(self, url_list:list):
+        print(urls)
+        return urls 
+    
+    def process_urls(self, url_list:list)->list:
+        """Processes unnecessary urls in the list and adds the base url if required. 
+
+        Args:
+            url_list (list): List of urls to process.
+
+        Returns:
+            list: List of processed urls.
+        """
         new_url_list = [url for url in url_list if "#" not in url]
-        process_list = [url for url in new_url_list if url.startswith(self.url)]
+        # processed_list = [url for url in new_url_list if url.startswith(self.url)]
+        for index, item in enumerate(new_url_list):
+            if item.startswith("/"):
+                new_url_list[index] = f"{self.url.rstrip('/')}{item}"
+        return new_url_list
+
+        
+    def get_page_contents(self, url_list:list):
         pages=[]
-        for link in process_list:
+        for link in url_list:
             try:
                 print(f"Processing link: {link}")
                 request = requests.get(link)
@@ -46,7 +62,8 @@ class ScrapeWebPage:
         return s
     
 
-# tai_scraper = ScrapeWebPage("https://kathford.edu.np/")
+# tai_scraper = ScrapeWebPage("https://tai.com.np/")
 # url_list = tai_scraper.get_url()
-# content = tai_scraper.get_page_contents(url_list = url_list)
-# print(url_list)
+# processed_url = tai_scraper.process_urls(url_list=url_list)
+# content = tai_scraper.get_page_contents(url_list = set(processed_url))
+# print(processed_url)
