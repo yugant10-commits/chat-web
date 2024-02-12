@@ -10,7 +10,8 @@ import streamlit as st
 def scrape_url(url):
     url_scrapper = ScrapeWebPage(url)
     url_list = url_scrapper.get_url()
-    content = url_scrapper.get_page_contents(url_list = url_list)
+    processed_url = url_scrapper.process_urls(url_list=url_list)
+    content = url_scrapper.get_page_contents(url_list = set(processed_url))
     vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
 
     return vector_obj
@@ -48,7 +49,7 @@ if __name__ == '__main__':
         #     question=question, 
         #     model="llama2"  
         # )._generate()
-        st.write(answer_response)
+        # st.write(answer_response)
         # answer.info('`Answer:`\n\n' + result)s
         st.info(f'`Sources:`\n\n {result[0].metadata["source"]}')
     # print(result)
