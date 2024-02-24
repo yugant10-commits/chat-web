@@ -1,0 +1,14 @@
+checkpoint_path = "wav2lip.pth"
+outfile = 'results/result_voice.mp4'
+static = False
+pads = [0, 10, 0, 0]
+face_det_batch_size = 8
+wav2lip_batch_size = 8
+resize_factor = 1
+crop=[0, -1, 0, -1]
+box = [-1, -1, -1, -1]
+rotate = False
+nosmooth = False
+# face = "1.jpg"
+# audio = "dev-low-res.wav"
+fps = 24

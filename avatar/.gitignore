@@ -1,0 +1,7 @@
+env
+*.mp4
+*.avi
+*.pth
+*.out
+*.wav
+*.mp3
