@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import re
+import pdb
 
 class ScrapeWebPage:
     """Scrapes the Web page and processes it as required.
@@ -10,8 +11,19 @@ class ScrapeWebPage:
     def __init__(self, url) -> None:
         self.url =url
     
-    
+    @staticmethod
+    def extract_base_url(url:str)->str:
+        """Extracts the base url from a long url."""
+        pattern = r'^.+?[^\/:](?=[?\/]|$)'
+        match = re.match(pattern, url)
+        if match:
+            return match.group(0)
+        else: 
+            raise Exception("Invalid URL.")
+        
     def get_url(self):
+        base_url = ScrapeWebPage.extract_base_url(self.url)
+        print(f"BASE URL:{base_url}")
         reqs = requests.get(self.url)
         soup = BeautifulSoup(reqs.text, "html.parser")
         urls = []
@@ -19,10 +31,14 @@ class ScrapeWebPage:
             urls.append(link.get("href"))
         if self.url not in urls:
             urls.append(self.url)
+        elif base_url not in urls:
+            urls.append(base_url)
+        urls = list(set(urls))
+        urls = list(filter(None, urls))
         print(urls)
-        return urls 
+        return urls, base_url
     
-    def process_urls(self, url_list:list)->list:
+    def process_urls(self, url_list:list, base_url:str)->list:
         """Processes unnecessary urls in the list and adds the base url if required. 
 
         Args:
@@ -36,6 +52,7 @@ class ScrapeWebPage:
         for index, item in enumerate(new_url_list):
             if item.startswith("/"):
                 new_url_list[index] = f"{self.url.rstrip('/')}{item}"
+        new_url_list = [url for url in new_url_list if base_url in url]
         return new_url_list
 
         
@@ -62,8 +79,8 @@ class ScrapeWebPage:
         return s
     
 
-# tai_scraper = ScrapeWebPage("https://tai.com.np/")
-# url_list = tai_scraper.get_url()
-# processed_url = tai_scraper.process_urls(url_list=url_list)
-# content = tai_scraper.get_page_contents(url_list = set(processed_url))
+# tai_scraper = ScrapeWebPage("https://www.wiseadmit.io/")
+# url_list, base_url = tai_scraper.get_url()
+# processed_url = tai_scraper.process_urls(url_list=url_list, base_url=base_url)
+# # content = tai_scraper.get_page_contents(url_list = set(processed_url))
 # print(processed_url)
