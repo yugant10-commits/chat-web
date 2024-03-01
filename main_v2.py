@@ -35,8 +35,10 @@ def scrape_url(url):
     url_scrapper = ScrapeWebPage(url)
     url_list, base_url = url_scrapper.get_url()
     processed_url = url_scrapper.process_urls(url_list=url_list, base_url=base_url)
-    content = url_scrapper.get_page_contents(url_list = set(processed_url))
+    content = url_scrapper.get_page_contents_markdown(url_list = set(processed_url))
+    print(content)
     vector_obj = VectorSearch(data=content, model_name="sentence-transformers/msmarco-distilbert-base-v3")
+    # vector_obj = VectorSearch(data=content, model_name="BAAI/bge-small-en-v1.5")
     return vector_obj
 
 for msg in st.session_state.messages:
@@ -56,16 +58,16 @@ if query:
     
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            docs, metadatas = vector_obj._split_data()
+            docs, metadatas = vector_obj._split_data_markdown()
             data_store = vector_obj._faiss_search()
             result = data_store.similarity_search(query)
             context = result[0].page_content
             answer_response = ResponseLLM(
                 context=context,
                 question=query,   
-            )._generate()
+            ).generate_markdown()
             st.session_state.messages.append({"role": "user", "content": query, "context": context})
-            st.write(answer_response)
+            st.markdown(answer_response)
             st.write(result[0].metadata["source"])
             st.session_state.messages.append({"role": "assistant", "content": answer_response, "context": context})
 
