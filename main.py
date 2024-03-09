@@ -11,24 +11,36 @@ from src.get_response import ResponseLLM
 from src.ollama import OllamaGeneration
 
 if 'messages' not in st.session_state:
-    st.session_state.messages = []
-    st.session_state.contect= []
+    opener = 'Hi! Ask me anything regarding the contents of the URL. '
+    st.session_state.messages = [{"role": "assistant", "content": opener}]
+    st.session_state.content= []
+    st.session_state.context = []
+im = Image.open("./images/favicon.png")
+st.set_page_config(page_title="suave.ai", page_icon=im)
 
-st.set_page_config(page_title="Suave AI", page_icon="🌐")
 with st.sidebar:
-    st.title('🦙💬 Suave AI')
-    st.write('Suave AI is a pioneering company specializing in the development of cutting-edge chatbot \
-        solutions tailored for businesses across various industries. Leveraging advanced artificial intelligence \
-            technology, Suave AI empowers organizations to enhance customer engagement, streamline operations, \
-                and drive growth through intuitive and intelligent chatbot interactions. ')
-
-    url = st.text_input("Please add a URL: ")
-    temperature = st.sidebar.slider('temperature', min_value=0.01, max_value=5.0, value=0.1, step=0.01)
-    # top_p = st.sidebar.slider('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-    # max_length = st.sidebar.slider('max_length', min_value=32, max_value=128, value=120, step=8)
-    st.markdown('📖 Check out our webpage [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
-
-  
+    st.image('images/mainlogo.png')
+    new_title = '<p style="font-family: sans-serif; color:Black; font-size: 16px;">Transforming <b>conversations</b> into <b>conversions.</b></p>'
+    url_page = '<b style="font-family: sans-serif; color:Black; font-size: 12px;"></b>'
+    st.markdown(new_title, unsafe_allow_html=True)
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown(url_page, unsafe_allow_html=True)
+    url = st.text_input("Please add a URL below to scrape your knowledge base.")
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown("##")
+    st.markdown("##")
+    
+    footer_info = '''<span style="font-family: Fantasy; color: black; font-size: 13px">
+    We have all the pricing and informatione mentioned in our webpage.
+    📖 Check out our <a href = "https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/">webpage</a>
+    </span>'''
+    st.markdown(footer_info, unsafe_allow_html=True)
+    
 
 @st.cache_data()
 def scrape_url(url):
@@ -42,8 +54,7 @@ def scrape_url(url):
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-
-query = st.chat_input("`Ask a question:`")
+query = st.chat_input("Please add your query")
 
 if url:
     with st.spinner("Scraping the webpage. Please wait."):
@@ -64,8 +75,8 @@ if query:
                 context=context,
                 question=query,   
             )._generate()
-            st.session_state.messages.append({"role": "user", "content": query, "context": context})
+            st.session_state.messages.append({"role": "user", "content": query})
             st.write(answer_response)
             st.write(result[0].metadata["source"])
-            st.session_state.messages.append({"role": "assistant", "content": answer_response, "context": context})
+            st.session_state.messages.append({"role": "assistant", "content": answer_response, "context": result[0].metadata["source"]})
 
