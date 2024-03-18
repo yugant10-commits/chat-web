@@ -48,7 +48,7 @@ def scrape_url(url):
     url_list, base_url = url_scrapper.get_url()
     processed_url = url_scrapper.process_urls(url_list=url_list, base_url=base_url)
     content = url_scrapper.get_page_contents(url_list = set(processed_url))
-    vector_obj = VectorSearch(data=content, model_name="all-MiniLM-L6-v2")
+    vector_obj = VectorSearch(data=content, model_name="sentence-transformers/msmarco-distilbert-base-v3")
     return vector_obj
 
 for msg in st.session_state.messages:

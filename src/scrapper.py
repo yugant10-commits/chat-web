@@ -4,6 +4,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 import re
 import pdb
+from src.add_image_markdown import get_content
 
 class ScrapeWebPage:
     """Scrapes the Web page and processes it as required.
@@ -56,6 +57,21 @@ class ScrapeWebPage:
         return new_url_list
 
         
+    def get_page_contents_markdown(self, url_list:list):
+        pages=[]
+        for link in url_list:
+            try:
+                print(f"Processing link: {link}")
+                filtered_text = get_content(link)
+                cleaned_text = ScrapeWebPage.remove_whitespace(filtered_text)
+                pages.append({
+                    "text": cleaned_text,
+                    "source": link
+                }) 
+            except Exception as e:
+                print("Invalid URL: ", link)
+        return pages
+    
     def get_page_contents(self, url_list:list):
         pages=[]
         for link in url_list:
@@ -72,6 +88,7 @@ class ScrapeWebPage:
             except Exception as e:
                 print("Invalid URL: ", link)
         return pages
+    
     @staticmethod
     def remove_whitespace(text:str):
         pattern = r"\s+"

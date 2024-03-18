@@ -24,13 +24,28 @@ Your Helpful Answer:
 
 """
 
+
+_PROMPT_TEMPLATE_MARKDOWN = """
+    CONTEXT: {context}
+    You are a helpful assistant, above is some context, 
+    Please answer the question, and make sure you follow ALL of the rules below:
+    1. Answer the questions only based on context provided, do not make things up
+    2. Answer questions in a helpful manner that straight to the point, with clear structure & all relevant information that might help users answer the question
+    3. Anwser should be formatted in Markdown
+    4. If there are relevant images, video, links, they are very important reference data, please include them as part of the answer
+
+    QUESTION: {question}
+    ANSWER (formatted in Markdown):
+    """
+
 class ResponseLLM:
 
     def __init__(
             self, 
             context: str, 
             question: str,
-            prompt: str = _PROMPT_TEMPLATE
+            prompt: str = _PROMPT_TEMPLATE,
+            prompt_markdown: str = _PROMPT_TEMPLATE_MARKDOWN
             ) :
         
 
@@ -40,10 +55,17 @@ class ResponseLLM:
 
         )
 
+        self.prompt_markdown = prompt_markdown.format(
+            context=context,
+            question=question
+        )
+
         self.knowledge = context
         self.prompt = prompt
+        
 
 
+    
     def _generate(self):
         """Call out to OpenAI's endpoint."""
   
@@ -62,6 +84,23 @@ class ResponseLLM:
         
         return response.choices[0].message.content
     
+    def generate_markdown(self):
+        """Call out to OpenAI's endpoint."""
+  
+        if len(os.environ["OPENAPI_KEY"])>0:
+
+
+            openai.api_key = os.environ["OPENAPI_KEY"]
+            response = openai.chat.completions.create(
+                                        model="gpt-3.5-turbo",
+                                        messages=[
+                                            {"role": "user", "content": (self.prompt_markdown)},        
+                                        ], 
+                                        temperature=0.5,
+                                        )
+
+        
+        return response.choices[0].message.content
 
 if __name__=="__main__":
 

@@ -1,4 +1,4 @@
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter, MarkdownHeaderTextSplitter
 from langchain.vectorstores import FAISS
 
 
@@ -10,11 +10,23 @@ class VectorSearch:
         self.embeddings = HuggingFaceEmbeddings(model_name = self.model_name)
     
     def _split_data(self):
+        
         text_splitter = CharacterTextSplitter(chunk_size=1500, separator='/n')
         self.docs, self.metadatas = [], []
         for page in self.data:
             splits = text_splitter.split_text(page['text'])
             self.docs.extend(splits)
+            self.metadatas.extend([{"source": page['source']}] * len(splits))
+        return self.docs, self.metadatas
+    
+    def _split_data_markdown(self):
+
+        text_splitter = CharacterTextSplitter(chunk_size=1500, separator='/n')
+        self.docs, self.metadatas = [], []
+        for page in self.data:
+            splits = text_splitter.split_text(page['text'].lower())
+            # print(splits)
+            self.docs.extend(splits[0].page_content)
             self.metadatas.extend([{"source": page['source']}] * len(splits))
         return self.docs, self.metadatas
     
