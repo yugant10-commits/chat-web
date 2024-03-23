@@ -96,8 +96,8 @@ class ScrapeWebPage:
         return s
     
 
-# tai_scraper = ScrapeWebPage("https://www.wiseadmit.io/")
-# url_list, base_url = tai_scraper.get_url()
-# processed_url = tai_scraper.process_urls(url_list=url_list, base_url=base_url)
-# # content = tai_scraper.get_page_contents(url_list = set(processed_url))
-# print(processed_url)
+tai_scraper = ScrapeWebPage("https://www.wiseadmit.io/")
+url_list, base_url = tai_scraper.get_url()
+processed_url = tai_scraper.process_urls(url_list=url_list, base_url=base_url)
+# content = tai_scraper.get_page_contents(url_list = set(processed_url))
+print(processed_url)

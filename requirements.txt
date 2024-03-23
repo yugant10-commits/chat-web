@@ -8,3 +8,6 @@ sentence-transformers
 python-dotenv
 langchain
 requests
+streamlit-chat
+html2text
+pinecone-client

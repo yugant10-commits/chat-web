@@ -9,6 +9,7 @@ from src.compressed_search import SimilarityCalculator
 from src.vector_search import VectorSearch
 from src.get_response import ResponseLLM
 from src.ollama import OllamaGeneration
+from PIL import Image
 
 if 'messages' not in st.session_state:
     opener = 'Hi! Ask me anything regarding the contents of the URL. '
